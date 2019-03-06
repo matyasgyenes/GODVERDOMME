@@ -1,9 +1,7 @@
 package spelScherm;
 
-import javafx.scene.Scene;
-import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import mainMenu.mainMenuPresenter;
 import mainMenu.mainMenuView;
 import model.Model;
 
@@ -24,48 +22,47 @@ public class spelSchermPresenter {
 
     private void addEventHandlers(){
         //Events
+        spelSchermView.getBtnAntwoord().setOnAction(e -> {
+            if(model.getStrContinent().equals("afrika")){
+                model.setBlVervangTest(model.hoofdstadTest(spelSchermView.getTfAntwoord().getText(),model.getStrLandenEnHooftstedenAf()));
+            }
+            else if(model.getStrContinent().equals("europa")){
+                model.setBlVervangTest(model.hoofdstadTest(spelSchermView.getTfAntwoord().getText(),model.getStrLandenEnHooftstedenEu()));
+            }
+            if (model.isBlVervangTest()){
+                //Label JuistOfFout zijn zichtbaarheid aan zetten, op JUIST zetten en als tekstkleur groen
+                spelSchermView.getLbJuistOfFout().setText("DE VORIGE VRAAG HAD JE JUIST");
+                spelSchermView.getLbJuistOfFout().setTextFill(Color.GREEN);
+
+                //Opniew een nieuwe hoofdstad zoeken, de tekst uit het tekstvak verwijderen en een nieuwe vraag stellen.
+                spelSchermView.getTfAntwoord().setText("");
+                spelSchermView.getLbHoofdstad().setText("Van welk land is " + model.getRandStrHoofdstad() + " de hoofdstad?");
+            }
+            else{
+                //Label JuistOfFout zijn zichtbaarheid aan zetten, op FOUT zetten en als tekstkleur ROOD
+                spelSchermView.getLbJuistOfFout().setText("DE VORIGE VRAAG HAD JE FOUT");
+                spelSchermView.getLbJuistOfFout().setTextFill(Color.RED);
+
+                //Opniew een nieuwe hoofdstad zoeken, de tekst uit het tekstvak verwijderen en een nieuwe vraag stellen.
+                spelSchermView.getTfAntwoord().setText("");
+                spelSchermView.getLbHoofdstad().setText("Van welk land is " + model.getRandStrHoofdstad() + " de hoofdstad?");
+            }
+        });
     }
     private void updateView(){
         //fill mainMenuView with data from model
 
         //Keuze tussen quiz en oefenen
         if (model.isBlnQuiz()){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText("QUIZ -> ");
+            spelSchermPresenter.this.spelSchermView.getLbTitel().setText("QUIZ -> " + model.getStrMode() + " -> " + model.getStrContinent());
         }
         else {
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText("OEF -> ");
+            spelSchermPresenter.this.spelSchermView.getLbTitel().setText("OEF -> "+ model.getStrMode() + " -> " + model.getStrContinent());
         }
-
-        //Keuze tussen mode
-        if(model.getStrMode()=="landen"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "LANDEN -> ");
+        if(model.getStrMode().equals("hoofdsteden")){
+            spelSchermView.getLbHoofdstad().setVisible(true);
+            spelSchermView.getLbJuistOfFout().setVisible(true);
+            spelSchermView.getLbHoofdstad().setText("Van welk land is " + model.getRandStrHoofdstad() + " de hoofdstad?");
         }
-        else if(model.getStrMode()=="vlaggen"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "VLAGGEN -> ");
-        }
-        else if(model.getStrMode()=="hoofdsteden"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "HOOFDSTEDEN -> ");
-        }
-
-        //Keuze tussen continent
-        if(model.getStrContinent()=="afrika"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "AF");
-        }
-        else if(model.getStrContinent()=="europa"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "EU");
-        }
-        else if(model.getStrContinent()=="oceanie"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "OC");
-        }
-        else if(model.getStrContinent()=="noordamerika"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "N-A");
-        }
-        else if(model.getStrContinent()=="zuidamerika"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "Z-A");
-        }
-        else if(model.getStrContinent()=="azie"){
-            spelSchermPresenter.this.spelSchermView.getLbTitel().setText(spelSchermView.getLbTitel().getText() + "AZ");
-        }
-
     }
 }
